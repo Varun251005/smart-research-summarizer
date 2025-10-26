@@ -1,0 +1,41 @@
+.download-section {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.download-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 1.25rem 3rem;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.download-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.download-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.download-button:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .download-button {
+    width: 100%;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+  }
+}

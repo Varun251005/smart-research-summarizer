@@ -1,0 +1,253 @@
+.file-upload-container {
+  margin: 2rem auto;
+  max-width: 900px;
+}
+
+.upload-box {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e8e8e8;
+}
+
+.upload-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.upload-header h2 {
+  font-size: 2rem;
+  color: #2d3748;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.upload-header p {
+  color: #718096;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.upload-actions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.plus-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 3rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.35);
+}
+
+.plus-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+}
+
+.plus-icon {
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.paste-section {
+  margin-top: 2rem;
+  background: #f8f9ff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 2px dashed #d0d7ff;
+  transition: all 0.3s ease;
+}
+
+.paste-section:hover {
+  border-color: #667eea;
+  background: #f0f4ff;
+}
+
+.paste-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.paste-textarea {
+  width: 100%;
+  min-height: 180px;
+  padding: 1.25rem;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: all 0.3s ease;
+  background: white;
+  color: #2d3748;
+}
+
+.paste-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.paste-textarea::placeholder {
+  color: #a0aec0;
+}
+
+.text-counter {
+  margin-top: 0.5rem;
+  text-align: right;
+  font-size: 0.85rem;
+  color: #667eea;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.preview-box {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+  border-radius: 16px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.file-icon {
+  font-size: 2.5rem;
+}
+
+.file-name {
+  flex: 1;
+  font-weight: 600;
+  color: #2d3748;
+  word-break: break-word;
+}
+
+.image-preview {
+  position: relative;
+  text-align: center;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 400px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.clear-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-btn:hover {
+  background: #dc2626;
+  transform: rotate(90deg) scale(1.1);
+}
+
+.error-box {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: #fee;
+  border-left: 4px solid #ef4444;
+  border-radius: 8px;
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+}
+
+.process-btn {
+  width: 100%;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+.process-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+}
+
+.process-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

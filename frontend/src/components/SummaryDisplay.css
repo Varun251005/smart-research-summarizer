@@ -1,0 +1,128 @@
+.summary-display {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+}
+
+.summary-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.summary-section h2 {
+  color: #667eea;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.summary-content {
+  background: #f8f9ff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.summary-content p {
+  color: #333;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.extracted-text-section {
+  margin-bottom: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-header h2 {
+  color: #667eea;
+  font-size: 1.5rem;
+}
+
+.toggle-button {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.toggle-button:hover {
+  background: #764ba2;
+  transform: translateY(-1px);
+}
+
+.extracted-content {
+  background: #fafafa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  max-height: 200px;
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.3s ease;
+}
+
+.extracted-content.expanded {
+  max-height: none;
+}
+
+.extracted-content p {
+  color: #555;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.truncated-note {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.metadata {
+  display: flex;
+  gap: 2rem;
+  padding-top: 1rem;
+  border-top: 2px solid #f0f0f0;
+  flex-wrap: wrap;
+}
+
+.metadata-item {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.metadata-item strong {
+  color: #333;
+  margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .summary-display {
+    padding: 1.5rem;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .metadata {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
