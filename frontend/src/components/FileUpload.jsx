@@ -2,12 +2,11 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import './FileUpload.css';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = 'http://localhost:5000';
 
 function FileUpload({ onUploadSuccess, loading, setLoading }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [pastedContent, setPastedContent] = useState('');
-  const [youtubeUrl, setYoutubeUrl] = useState('');
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
 
@@ -16,53 +15,28 @@ function FileUpload({ onUploadSuccess, loading, setLoading }) {
     if (file && file.type === 'application/pdf') {
       setSelectedFile(file);
       setPastedContent('');
-      setYoutubeUrl('');
       setError(null);
     } else {
       setError('Please select a PDF file');
     }
   };
 
-  const handlePaste = async (e) => {
-    // Allow default paste behavior to work naturally
-    // The onChange handler will capture the pasted text
-    setSelectedFile(null);
-    setYoutubeUrl('');
-    setError(null);
-  };
-
   const handleUpload = async () => {
     setLoading(true);
     setError(null);
     try {
-      // Handle YouTube URL
-      if (youtubeUrl && !selectedFile && !pastedContent) {
-        const response = await axios.post(`${API_URL}/youtube`, { url: youtubeUrl });
-        if (response.data && response.data.success) {
-          onUploadSuccess({ 
-            success: true, 
-            extracted_text: response.data.extracted_text, 
-            summary: response.data.summary, 
-            filename: response.data.filename || 'YouTube Video',
-            full_text_length: response.data.full_text_length
-          });
-          setYoutubeUrl('');
-        }
-        return;
-      }
-      
       // Handle pasted text
-      if (pastedContent && !selectedFile && !youtubeUrl) {
+      if (pastedContent && !selectedFile) {
         const response = await axios.post(`${API_URL}/summarize-text`, { text: pastedContent });
         if (response.data) {
-          onUploadSuccess({ success: true, extracted_text: pastedContent, summary: response.data.summary, filename: 'Pasted Text' });
+          onUploadSuccess({ success: true, extracted_text: pastedContent, summary: response.data.summary, filename: 'Pasted Text', full_text_length: pastedContent.length });
           setPastedContent('');
         }
         return;
       }
       
       // Handle PDF file
-      if (selectedFile && !pastedContent && !youtubeUrl) {
+      if (selectedFile && !pastedContent) {
         const formData = new FormData();
         formData.append('file', selectedFile);
         const response = await axios.post(`${API_URL}/upload`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
@@ -82,7 +56,6 @@ function FileUpload({ onUploadSuccess, loading, setLoading }) {
   const clearContent = () => { 
     setSelectedFile(null); 
     setPastedContent(''); 
-    setYoutubeUrl('');
     setError(null); 
   };
 
@@ -90,34 +63,8 @@ function FileUpload({ onUploadSuccess, loading, setLoading }) {
     <div className='file-upload-container'>
       <div className='upload-box'>
         <div className='upload-header'>
-          <h2>📚 Smart Research Summarizer</h2>
-          <p>Upload PDF, paste text, or enter YouTube URL for instant summaries</p>
-        </div>
-        
-        {/* YouTube URL Input */}
-        <div className='youtube-section'>
-          <div className='input-header'>
-            <span>🎥</span>
-            <span>YouTube Video URL</span>
-          </div>
-          <input
-            type='text'
-            placeholder='Paste YouTube video URL here (e.g., https://www.youtube.com/watch?v=...)'
-            value={youtubeUrl}
-            onChange={(e) => {
-              setYoutubeUrl(e.target.value);
-              if (e.target.value) {
-                setSelectedFile(null);
-                setPastedContent('');
-                setError(null);
-              }
-            }}
-            className='youtube-input'
-          />
-        </div>
-        
-        <div className='divider'>
-          <span>OR</span>
+          <h2>✨ PaperPilot AI</h2>
+          <p>Upload PDF or paste text for instant summaries</p>
         </div>
         
         <div className='upload-actions'>
@@ -131,6 +78,7 @@ function FileUpload({ onUploadSuccess, loading, setLoading }) {
         <div className='divider'>
           <span>OR</span>
         </div>
+        
         <div className='paste-section'>
           <div className='paste-header'>
             <span>✍️</span>
@@ -143,11 +91,9 @@ function FileUpload({ onUploadSuccess, loading, setLoading }) {
               setPastedContent(e.target.value);
               if (e.target.value) {
                 setSelectedFile(null);
-                setYoutubeUrl('');
                 setError(null);
               }
             }} 
-            onPaste={handlePaste}
             className='paste-textarea'
             rows={8}
           />
@@ -158,15 +104,6 @@ function FileUpload({ onUploadSuccess, loading, setLoading }) {
           )}
         </div>
         
-        {youtubeUrl && (
-          <div className='preview-box'>
-            <div className='file-preview'>
-              <span className='file-icon'>🎥</span>
-              <span className='file-name'>{youtubeUrl}</span>
-              <button className='clear-btn' onClick={clearContent}>✕</button>
-            </div>
-          </div>
-        )}
         {selectedFile && (
           <div className='preview-box'>
             <div className='file-preview'>
@@ -184,7 +121,7 @@ function FileUpload({ onUploadSuccess, loading, setLoading }) {
           </div>
         )}
         
-        {(selectedFile || pastedContent || youtubeUrl) && (
+        {(selectedFile || pastedContent) && (
           <button onClick={handleUpload} disabled={loading} className='process-btn'>
             {loading ? (
               <>

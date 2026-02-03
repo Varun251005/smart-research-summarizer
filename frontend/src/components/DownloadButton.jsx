@@ -2,9 +2,9 @@ import React from 'react';
 import axios from 'axios';
 import './DownloadButton.css';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = 'http://localhost:5000';
 
-function DownloadButton({ uploadedData, wikipediaData, loading, setLoading }) {
+function DownloadButton({ uploadedData, moreInfo, loading, setLoading }) {
   const handleDownload = async () => {
     if (!uploadedData) return;
 
@@ -16,10 +16,10 @@ function DownloadButton({ uploadedData, wikipediaData, loading, setLoading }) {
       formData.append('original_text', uploadedData.extracted_text);
       formData.append('summary', uploadedData.summary);
 
-      if (wikipediaData && wikipediaData.found) {
-        formData.append('wikipedia_title', wikipediaData.title);
-        formData.append('wikipedia_summary', wikipediaData.summary);
-        formData.append('wikipedia_url', wikipediaData.url);
+      if (moreInfo && moreInfo.found) {
+        formData.append('wikipedia_title', moreInfo.title);
+        formData.append('wikipedia_summary', moreInfo.summary);
+        formData.append('wikipedia_url', moreInfo.url);
       }
 
       const response = await axios.post(`${API_URL}/generate-pdf`, formData, {

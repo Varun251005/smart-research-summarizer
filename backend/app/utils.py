@@ -19,9 +19,9 @@ wiki_wiki = wikipediaapi.Wikipedia(
     user_agent='SmartResearchSummarizer/1.0'
 )
 
-# Disable heavy AI model for faster processing
+# Initialize summarization model (disabled by default for faster startup)
 summarizer = None
-print("Using fast extractive summarization instead of AI model")
+print("Using extractive summarization (AI model disabled for performance)")
 
 
 def extract_text_from_pdf(file_content: bytes) -> str:
@@ -68,13 +68,31 @@ def extract_text_with_fallback(file_content: bytes) -> str:
 
 def summarize_text(text: str, max_length: int = 500, min_length: int = 100) -> str:
     """
-    Fast extractive summarization - returns key sentences instantly
+    Summarize text using BART model or fallback to extractive summarization
     """
     if not text:
         return "No text to summarize"
     
-    # Split into sentences
-    sentences = [s.strip() + '.' for s in text.split('.') if s.strip()]
+    text = text.strip()
+    if len(text) < 50:
+        return text
+    
+    # Try AI-based summarization first
+    if summarizer is not None:
+        try:
+            # Limit input to avoid model limitations
+            # BART model has a max input length of 1024 tokens
+            words = text.split()
+            truncated_text = ' '.join(words[:2000])  # ~max tokens
+            
+            result = summarizer(truncated_text, max_length=max_length, min_length=min_length, do_sample=False)
+            if result and len(result) > 0:
+                return result[0]['summary_text']
+        except Exception as e:
+            print(f"AI summarization failed: {str(e)}, falling back to extractive")
+    
+    # Fallback to extractive summarization
+    sentences = [s.strip() for s in text.split('.') if s.strip()]
     
     if len(sentences) == 0:
         return "No valid sentences found."
@@ -85,7 +103,7 @@ def summarize_text(text: str, max_length: int = 500, min_length: int = 100) -> s
     
     if total <= 5:
         # If short, return all
-        return ' '.join(sentences)
+        return '. '.join(sentences) + '.'
     elif total <= 10:
         # Take first 3 and last 2
         summary_sentences = sentences[:3] + sentences[-2:]
@@ -93,7 +111,7 @@ def summarize_text(text: str, max_length: int = 500, min_length: int = 100) -> s
         # Take first 3, middle 2, last 2
         summary_sentences = sentences[:3] + sentences[total//2:total//2+2] + sentences[-2:]
     
-    summary = ' '.join(summary_sentences)
+    summary = '. '.join(summary_sentences) + '.'
     
     # Limit to reasonable length
     if len(summary) > 1000:
