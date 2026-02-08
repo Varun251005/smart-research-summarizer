@@ -91,17 +91,19 @@
 }
 
 .profile-name {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 44px;
+  font-weight: 800;
   margin: 1rem 0 0.5rem 0;
   color: #F8FAFC;
 }
 
 .profile-title {
-  font-size: 1rem;
-  color: #94A3B8;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #4F46E5;
   margin: 0;
-  letter-spacing: 0.5px;
 }
 
 /* About Section */
@@ -129,11 +131,11 @@
 }
 
 .about-text {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #CBD5E1;
+  font-size: 17px;
+  line-height: 1.75;
+  color: #1F2937;
   margin: 1rem 0;
-  text-align: justify;
+  text-align: center;
 }
 
 .about-text .highlight {
@@ -304,7 +306,7 @@
   }
 
   .profile-name {
-    font-size: 1.5rem;
+    font-size: 36px;
   }
 
   .about-main {
@@ -357,11 +359,11 @@
   }
 
   .profile-name {
-    font-size: 1.3rem;
+    font-size: 28px;
   }
 
   .profile-title {
-    font-size: 0.9rem;
+    font-size: 12px;
   }
 
   .tech-grid {

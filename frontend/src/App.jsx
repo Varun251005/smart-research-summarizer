@@ -10,11 +10,11 @@ function App() {
   const [uploadedData, setUploadedData] = useState(null);
   const [moreInfo, setMoreInfo] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState('dashboard');
 
   const handleUploadSuccess = (data) => {
     setUploadedData(data);
-    setMoreInfo(null); // Reset more info data
+    setMoreInfo(null);
   };
 
   const handleKnowMoreSuccess = (data) => {
@@ -23,7 +23,44 @@ function App() {
 
   return (
     <div className="App">
-      {currentPage === 'home' ? (
+      {currentPage === 'dashboard' ? (
+        <div className="dashboard-container">
+          <div className="dashboard-header">
+            <h1>PaperPilot AI</h1>
+            <p>Smart Research Summarizer</p>
+          </div>
+
+          <div className="dashboard-buttons">
+            <button
+              className="dashboard-btn about-btn"
+              onClick={() => setCurrentPage('about')}
+            >
+              <span className="btn-icon">👤</span>
+              <span className="btn-text">About</span>
+            </button>
+
+            <button
+              className="dashboard-btn summarizer-btn"
+              onClick={() => setCurrentPage('summarizer')}
+            >
+              <span className="btn-icon">📄</span>
+              <span className="btn-text">Summarizer</span>
+            </button>
+          </div>
+        </div>
+      ) : currentPage === 'about' ? (
+        <>
+          <About />
+          <div className="back-button-container">
+            <button
+              className="back-btn"
+              onClick={() => setCurrentPage('dashboard')}
+            >
+              ← Back to Dashboard
+            </button>
+          </div>
+        </>
+      ) : (
         <>
           <header className="App-header">
             <div className="header-content">
@@ -31,20 +68,19 @@ function App() {
                 <h1>✨ PaperPilot AI</h1>
                 <p>Summarize PDFs and text, then learn more with just one click</p>
               </div>
-              <button 
-                className="nav-btn about-nav-btn"
-                onClick={() => setCurrentPage('about')}
-                title="About"
+              <button
+                className="nav-btn"
+                onClick={() => setCurrentPage('dashboard')}
               >
-                About
+                ← Dashboard
               </button>
             </div>
           </header>
 
           <main className="App-main">
             <div className="container">
-              <FileUpload 
-                onUploadSuccess={handleUploadSuccess} 
+              <FileUpload
+                onUploadSuccess={handleUploadSuccess}
                 loading={loading}
                 setLoading={setLoading}
               />
@@ -52,8 +88,8 @@ function App() {
               {uploadedData && (
                 <>
                   <SummaryDisplay data={uploadedData} />
-                  
-                  <WikipediaLookup 
+
+                  <WikipediaLookup
                     onLookupSuccess={handleKnowMoreSuccess}
                     loading={loading}
                     setLoading={setLoading}
@@ -69,7 +105,7 @@ function App() {
                     </div>
                   )}
 
-                  <DownloadButton 
+                  <DownloadButton
                     uploadedData={uploadedData}
                     moreInfo={moreInfo}
                     loading={loading}
@@ -83,18 +119,6 @@ function App() {
           <footer className="App-footer">
             <p>© 2024 PaperPilot AI</p>
           </footer>
-        </>
-      ) : (
-        <>
-          <About />
-          <div className="about-footer">
-            <button 
-              className="back-btn"
-              onClick={() => setCurrentPage('home')}
-            >
-              ← Back to PaperPilot AI
-            </button>
-          </div>
         </>
       )}
     </div>
