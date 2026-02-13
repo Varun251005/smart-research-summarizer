@@ -132,13 +132,15 @@ smart-research-summarizer/
 - `GET /know-more` - Search Wikipedia
 - `POST /generate-pdf` - Export summary as PDF
 
-## 🎨 Features in Detail
+## 🎯 Features in Detail
 
 ### Intelligent Summarization
 The app uses an improved extractive summarization algorithm that:
 - Identifies key sentences based on position and content
 - Maintains context and coherence
 - Produces concise, readable summaries
+- Handles documents of various lengths
+- Optimized for speed and accuracy
 
 ### Audio Overview
 - Converts summaries to natural-sounding speech
