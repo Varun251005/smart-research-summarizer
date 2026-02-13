@@ -7,7 +7,8 @@ from app.utils import (
     extract_text_with_fallback,
     summarize_text,
     lookup_wikipedia,
-    generate_pdf
+    generate_pdf,
+    generate_audio_overview
 )
 
 app = FastAPI(title="Smart Research Summarizer API")
@@ -15,7 +16,7 @@ app = FastAPI(title="Smart Research Summarizer API")
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001"],  # React dev server
+    allow_origins=["http://localhost:3000", "http://localhost:3001", "http://localhost:5000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -25,9 +26,9 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {
-        "message": "Smart Research Summarizer API",
-        "version": "1.0.0",
-        "endpoints": ["/upload", "/summarize-text", "/know-more", "/generate-pdf"]
+        "message": "Mini NotebookLM API",
+        "version": "2.0.0",
+        "endpoints": ["/upload", "/summarize-text", "/know-more", "/generate-pdf", "/generate-audio"]
     }
 
 
@@ -145,6 +146,34 @@ async def create_pdf(
         raise HTTPException(status_code=500, detail=f"Error generating PDF: {str(e)}")
 
 
+@app.post("/generate-audio")
+async def create_audio_overview(data: dict):
+    """
+    Generate audio overview from summary
+    """
+    try:
+        summary = data.get('summary', '')
+        if not summary:
+            raise HTTPException(status_code=400, detail="Summary is required")
+        
+        audio_bytes = generate_audio_overview(summary)
+        
+        return StreamingResponse(
+            io.BytesIO(audio_bytes),
+            media_type="audio/mpeg",
+            headers={"Content-Disposition": "attachment; filename=audio_overview.mp3"}
+        )
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating audio: {str(e)}")
+
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    print("\n" + "="*50)
+    print("  Mini NotebookLM Backend Server")
+    print("="*50)
+    print("  Server running at: http://localhost:5000")
+    print("  API Documentation: http://localhost:5000/docs")
+    print("="*50 + "\n")
+    uvicorn.run(app, host="0.0.0.0", port=5000)

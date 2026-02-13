@@ -10,18 +10,14 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.units import inch
 import wikipediaapi
-from transformers import pipeline
+from gtts import gTTS
 
 
 # Initialize Wikipedia API
 wiki_wiki = wikipediaapi.Wikipedia(
     language='en',
-    user_agent='SmartResearchSummarizer/1.0'
+    user_agent='MiniNotebookLM/2.0'
 )
-
-# Initialize summarization model (disabled by default for faster startup)
-summarizer = None
-print("Using extractive summarization (AI model disabled for performance)")
 
 
 def extract_text_from_pdf(file_content: bytes) -> str:
@@ -68,7 +64,7 @@ def extract_text_with_fallback(file_content: bytes) -> str:
 
 def summarize_text(text: str, max_length: int = 500, min_length: int = 100) -> str:
     """
-    Summarize text using BART model or fallback to extractive summarization
+    Summarize text using improved extractive summarization
     """
     if not text:
         return "No text to summarize"
@@ -77,46 +73,38 @@ def summarize_text(text: str, max_length: int = 500, min_length: int = 100) -> s
     if len(text) < 50:
         return text
     
-    # Try AI-based summarization first
-    if summarizer is not None:
-        try:
-            # Limit input to avoid model limitations
-            # BART model has a max input length of 1024 tokens
-            words = text.split()
-            truncated_text = ' '.join(words[:2000])  # ~max tokens
-            
-            result = summarizer(truncated_text, max_length=max_length, min_length=min_length, do_sample=False)
-            if result and len(result) > 0:
-                return result[0]['summary_text']
-        except Exception as e:
-            print(f"AI summarization failed: {str(e)}, falling back to extractive")
-    
-    # Fallback to extractive summarization
-    sentences = [s.strip() for s in text.split('.') if s.strip()]
+    # Split into sentences
+    sentences = [s.strip() for s in text.replace('\n', ' ').split('.') if s.strip() and len(s.strip()) > 10]
     
     if len(sentences) == 0:
         return "No valid sentences found."
     
-    # Quick extractive summary - take first, middle, and last sentences for balance
-    summary_sentences = []
+    # Calculate sentence importance based on position and length
+    important_sentences = []
     total = len(sentences)
     
-    if total <= 5:
-        # If short, return all
+    if total <= 3:
         return '. '.join(sentences) + '.'
-    elif total <= 10:
-        # Take first 3 and last 2
-        summary_sentences = sentences[:3] + sentences[-2:]
-    else:
-        # Take first 3, middle 2, last 2
-        summary_sentences = sentences[:3] + sentences[total//2:total//2+2] + sentences[-2:]
     
-    summary = '. '.join(summary_sentences) + '.'
+    # Take first sentence (usually contains main topic)
+    important_sentences.append(sentences[0])
+    
+    # Take sentences from middle (core content)
+    if total > 5:
+        mid_start = total // 3
+        mid_end = (2 * total) // 3
+        important_sentences.extend(sentences[mid_start:mid_start + 2])
+    
+    # Take last sentence (often contains conclusion)
+    if total > 2:
+        important_sentences.append(sentences[-1])
+    
+    summary = '. '.join(important_sentences) + '.'
     
     # Limit to reasonable length
-    if len(summary) > 1000:
+    if len(summary) > 800:
         words = summary.split()
-        summary = ' '.join(words[:150]) + '...'
+        summary = ' '.join(words[:120]) + '...'
     
     return summary
 
@@ -198,3 +186,25 @@ def generate_pdf(title: str, original_text: str, summary: str, wikipedia_info: O
     doc.build(story)
     buffer.seek(0)
     return buffer.getvalue()
+
+
+def generate_audio_overview(summary: str) -> bytes:
+    """
+    Generate audio overview from summary using text-to-speech
+    """
+    try:
+        # Create introduction
+        intro = "Here's your audio overview. "
+        full_text = intro + summary
+        
+        # Generate audio
+        tts = gTTS(text=full_text, lang='en', slow=False)
+        
+        # Save to bytes buffer
+        audio_buffer = io.BytesIO()
+        tts.write_to_fp(audio_buffer)
+        audio_buffer.seek(0)
+        
+        return audio_buffer.getvalue()
+    except Exception as e:
+        raise Exception(f"Error generating audio: {str(e)}")

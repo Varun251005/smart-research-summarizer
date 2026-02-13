@@ -5,15 +5,15 @@ function About() {
   return (
     <div className="about-container">
       <header className="about-header">
-        <h1>✨ PaperPilot AI</h1>
-        <p>Summarize PDFs and text, then learn more with just one click</p>
+        <h1>📓 Mini NotebookLM</h1>
+        <p>Transform your documents into intelligent summaries with audio overviews</p>
       </header>
 
       <main className="about-main">
         <div className="profile-section">
           <div className="profile-image-wrapper">
             <div className="profile-image">
-              <span className="profile-initials">VP</span>
+              <span className="profile-initials">VR</span>
             </div>
           </div>
 
@@ -24,7 +24,8 @@ function About() {
         <section className="about-section">
           <p className="about-text">
             Driven by curiosity and innovation, I build intelligent AI-powered solutions that turn complex tasks into simple experiences.
-            PaperPilot AI is my flagship project, reimagining document summarization through advanced artificial intelligence.
+            Mini NotebookLM is inspired by Google's NotebookLM, reimagining document summarization through advanced artificial intelligence
+            with audio overview capabilities.
           </p>
         </section>
 
@@ -45,8 +46,6 @@ function About() {
             </a>
           </div>
         </section>
-
-        
       </main>
     </div>
   );
