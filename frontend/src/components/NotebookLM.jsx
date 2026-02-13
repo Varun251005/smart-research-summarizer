@@ -12,6 +12,7 @@ function NotebookLM({ onNavigate }) {
   const [audioLoading, setAudioLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [wikiInfo, setWikiInfo] = useState(null);
+  const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
   const audioRef = useRef(null);
 
@@ -37,6 +38,7 @@ function NotebookLM({ onNavigate }) {
         setAudioUrl(null);
       }
     } catch (error) {
+      setError('Error uploading file. Please try again.');
       alert(error.response?.data?.detail || 'Error uploading file');
     } finally {
       setLoading(false);
