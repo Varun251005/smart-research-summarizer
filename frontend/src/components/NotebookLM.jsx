@@ -12,7 +12,6 @@ function NotebookLM({ onNavigate }) {
   const [audioLoading, setAudioLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [wikiInfo, setWikiInfo] = useState(null);
-  const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
   const audioRef = useRef(null);
 
@@ -38,7 +37,6 @@ function NotebookLM({ onNavigate }) {
         setAudioUrl(null);
       }
     } catch (error) {
-      setError('Error uploading file. Please try again.');
       alert(error.response?.data?.detail || 'Error uploading file');
     } finally {
       setLoading(false);
@@ -115,7 +113,26 @@ function NotebookLM({ onNavigate }) {
     }
   };
 
-  const [textInput, setTextInput] = useState('');
+  const handleUrlPaste = async () => {
+    const url = prompt('Paste article URL (http/https):');
+    if (!url) return;
+
+    setLoading(true);
+    try {
+      const response = await axios.post(`${API_URL}/summarize-url`, { url });
+
+      if (response.data.success) {
+        const sourceName = response.data.title || url;
+        setSources([{ name: sourceName, type: 'url', data: response.data }]);
+        setSummary(response.data.summary);
+        setAudioUrl(null);
+      }
+    } catch (error) {
+      alert(error.response?.data?.detail || 'Error processing URL');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="notebooklm-container">
@@ -161,7 +178,7 @@ function NotebookLM({ onNavigate }) {
                   <button className="upload-btn" onClick={() => fileInputRef.current?.click()}>
                     <span>📤</span> Upload files
                   </button>
-                  <button className="upload-btn">
+                  <button className="upload-btn" onClick={handleUrlPaste}>
                     <span>🔗</span> Websites
                   </button>
                   <button className="upload-btn">
@@ -210,7 +227,9 @@ function NotebookLM({ onNavigate }) {
               <div className="sources-list">
                 {sources.map((source, idx) => (
                   <div key={idx} className="source-item">
-                    <span className="source-icon">{source.type === 'pdf' ? '📄' : '📝'}</span>
+                    <span className="source-icon">
+                      {source.type === 'pdf' ? '📄' : source.type === 'url' ? '🔗' : '📝'}
+                    </span>
                     <span className="source-name">{source.name}</span>
                   </div>
                 ))}

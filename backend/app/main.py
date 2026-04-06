@@ -5,6 +5,7 @@ import io
 from typing import Optional
 from app.utils import (
     extract_text_with_fallback,
+    extract_text_from_url,
     summarize_text,
     lookup_wikipedia,
     generate_pdf,
@@ -28,7 +29,7 @@ async def root():
     return {
         "message": "Mini NotebookLM API",
         "version": "2.0.0",
-        "endpoints": ["/upload", "/summarize-text", "/know-more", "/generate-pdf", "/generate-audio"]
+        "endpoints": ["/upload", "/summarize-text", "/summarize-url", "/know-more", "/generate-pdf", "/generate-audio"]
     }
 
 
@@ -50,6 +51,34 @@ async def summarize_pasted_text(data: dict):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error summarizing text: {str(e)}")
+
+
+@app.post("/summarize-url")
+async def summarize_url_content(data: dict):
+    """
+    Fetch article content from URL and summarize it
+    """
+    url = data.get('url', '').strip()
+    if not url:
+        raise HTTPException(status_code=400, detail="URL is required")
+
+    try:
+        result = extract_text_from_url(url)
+        extracted_text = result["text"]
+        summary = summarize_text(extracted_text)
+
+        return {
+            "success": True,
+            "url": url,
+            "title": result["title"],
+            "extracted_text": extracted_text[:5000],
+            "full_text_length": len(extracted_text),
+            "summary": summary
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing URL: {str(e)}")
 
 
 @app.post("/upload")

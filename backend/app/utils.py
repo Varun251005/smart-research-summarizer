@@ -1,8 +1,11 @@
 import io
 import os
 from typing import Optional
+from urllib.parse import urlparse
 import PyPDF2
 import pytesseract
+import requests
+import urllib3
 from PIL import Image
 from pdf2image import convert_from_bytes
 from reportlab.lib.pagesizes import letter
@@ -10,6 +13,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.units import inch
 import wikipediaapi
+from bs4 import BeautifulSoup
 from gtts import gTTS
 
 
@@ -18,6 +22,7 @@ wiki_wiki = wikipediaapi.Wikipedia(
     language='en',
     user_agent='MiniNotebookLM/2.0'
 )
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def extract_text_from_pdf(file_content: bytes) -> str:
@@ -60,6 +65,62 @@ def extract_text_with_fallback(file_content: bytes) -> str:
         text = perform_ocr(file_content)
     
     return text
+
+
+def extract_text_from_url(url: str) -> dict:
+    """
+    Fetch and extract readable article text from a URL
+    """
+    parsed = urlparse(url)
+    if parsed.scheme not in ["http", "https"]:
+        raise ValueError("Please provide a valid http/https URL")
+
+    headers = {
+        "User-Agent": "MiniNotebookLM/2.0 (+https://localhost)"
+    }
+
+    try:
+        response = requests.get(url, headers=headers, timeout=15)
+    except requests.exceptions.SSLError:
+        response = requests.get(url, headers=headers, timeout=15, verify=False)
+    response.raise_for_status()
+
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    for tag in soup(["script", "style", "noscript", "header", "footer", "nav", "form", "svg"]):
+        tag.decompose()
+
+    title = "Untitled Article"
+    if soup.title and soup.title.string:
+        title = soup.title.string.strip()
+
+    main_container = soup.find("article") or soup.find("main") or soup.body
+    if not main_container:
+        raise ValueError("Could not parse article content from URL")
+
+    paragraphs = [
+        p.get_text(" ", strip=True)
+        for p in main_container.find_all(["p", "li"])
+    ]
+
+    cleaned_paragraphs = [
+        paragraph for paragraph in paragraphs
+        if paragraph and len(paragraph) > 40
+    ]
+
+    extracted_text = "\n".join(cleaned_paragraphs).strip()
+
+    if len(extracted_text) < 120:
+        fallback_text = main_container.get_text(" ", strip=True)
+        extracted_text = " ".join(fallback_text.split())
+
+    if not extracted_text or len(extracted_text) < 120:
+        raise ValueError("Not enough readable content found at this URL")
+
+    return {
+        "title": title,
+        "text": extracted_text
+    }
 
 
 def summarize_text(text: str, max_length: int = 500, min_length: int = 100) -> str:
