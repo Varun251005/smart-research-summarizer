@@ -138,7 +138,7 @@ function NotebookLM({ onNavigate }) {
     <div className="notebooklm-container">
       <header className="notebooklm-header">
         <div className="header-left">
-          <h1>📓 Mini NotebookLM</h1>
+          <h1>📓 Summarizer</h1>
         </div>
         <button className="about-link" onClick={() => onNavigate('about')}>
           About
