@@ -181,15 +181,6 @@ function NotebookLM({ onNavigate }) {
                   <button className="upload-btn" onClick={handleUrlPaste}>
                     <span>🔗</span> Websites
                   </button>
-                  <button className="upload-btn">
-                    <span>☁️</span> Drive
-                  </button>
-                  <button className="upload-btn" onClick={() => {
-                    const text = prompt('Paste your text:');
-                    if (text) handleTextPaste(text);
-                  }}>
-                    <span>📋</span> Copied text
-                  </button>
                 </div>
 
                 <input
