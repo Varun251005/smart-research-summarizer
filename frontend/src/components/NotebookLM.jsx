@@ -149,7 +149,7 @@ function NotebookLM({ onNavigate }) {
         {!sources.length ? (
           <div className="welcome-screen">
             <div className="welcome-content">
-              <h2>Create Audio and Video Overviews from<br /><span className="highlight">your notes</span></h2>
+              <h2>Create Audio and Video Overviews from<br /><span className="highlight">your research</span></h2>
               
               <div className="search-section">
                 <div className="search-box">
