@@ -5,7 +5,7 @@ function About() {
   return (
     <div className="about-container">
       <header className="about-header">
-        <h1>📓 Mini NotebookLM</h1>
+        <h1>📓 Summarizer</h1>
         <p>Transform your documents into intelligent summaries with audio overviews</p>
       </header>
 
@@ -24,7 +24,7 @@ function About() {
         <section className="about-section">
           <p className="about-text">
             Driven by curiosity and innovation, I build intelligent AI-powered solutions that turn complex tasks into simple experiences.
-            Mini NotebookLM is inspired by Google's NotebookLM, reimagining document summarization through advanced artificial intelligence
+            Summarizer is inspired by Google's NotebookLM, reimagining document summarization through advanced artificial intelligence
             with audio overview capabilities.
           </p>
         </section>
