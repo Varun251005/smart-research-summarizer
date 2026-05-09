@@ -271,6 +271,17 @@ function NotebookLM({ onNavigate }) {
             <div className="main-content">
               <div className="content-header">
                 <h2>Summary</h2>
+                <button
+                  className="summary-back-btn"
+                  onClick={() => {
+                    setSources([]);
+                    setSummary(null);
+                    setAudioUrl(null);
+                    setWikiInfo(null);
+                  }}
+                >
+                  ← Back
+                </button>
               </div>
 
               <div className="summary-card">
