@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import './NotebookLM.css';
 
-const API_URL = 'http://localhost:5000';
+const API_URL = 'http://localhost:8000';
 
 function NotebookLM({ onNavigate }) {
   const [sources, setSources] = useState([]);
