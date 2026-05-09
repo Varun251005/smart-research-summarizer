@@ -164,10 +164,6 @@ function NotebookLM({ onNavigate }) {
                   />
                   <button className="search-btn" onClick={handleSearch}>→</button>
                 </div>
-                <div className="search-options">
-                  <button className="option-btn">🌐 Web</button>
-                  <button className="option-btn">⚡ Fast Research</button>
-                </div>
               </div>
 
               <div className="upload-section">
