@@ -113,27 +113,6 @@ function NotebookLM() {
     }
   };
 
-  const handleUrlPaste = async () => {
-    const url = prompt('Paste article URL (http/https):');
-    if (!url) return;
-
-    setLoading(true);
-    try {
-      const response = await axios.post(`${API_URL}/summarize-url`, { url });
-
-      if (response.data.success) {
-        const sourceName = response.data.title || url;
-        setSources([{ name: sourceName, type: 'url', data: response.data }]);
-        setSummary(response.data.summary);
-        setAudioUrl(null);
-      }
-    } catch (error) {
-      alert(error.response?.data?.detail || 'Error processing URL');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="notebooklm-container">
       <header className="notebooklm-header">
@@ -170,9 +149,6 @@ function NotebookLM() {
                 <div className="upload-buttons">
                   <button className="upload-btn" onClick={() => fileInputRef.current?.click()}>
                     <span>📤</span> Upload files
-                  </button>
-                  <button className="upload-btn" onClick={handleUrlPaste}>
-                    <span>🔗</span> Websites
                   </button>
                 </div>
 
