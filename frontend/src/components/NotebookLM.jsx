@@ -4,7 +4,7 @@ import './NotebookLM.css';
 
 const API_URL = 'http://localhost:8000';
 
-function NotebookLM({ onNavigate }) {
+function NotebookLM() {
   const [sources, setSources] = useState([]);
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -140,9 +140,6 @@ function NotebookLM({ onNavigate }) {
         <div className="header-left">
           <h1>📓 Summarizer</h1>
         </div>
-        <button className="about-link" onClick={() => onNavigate('about')}>
-          About
-        </button>
       </header>
 
       <main className="notebooklm-main">
